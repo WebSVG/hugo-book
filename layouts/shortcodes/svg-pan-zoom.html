@@ -1,0 +1,24 @@
+{{ $src := .Get 0 }}
+{{ $id := substr (md5 $src) 0 16 }}
+
+<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" />
+<script>
+  document.getElementById('svg-{{$id}}').addEventListener('load', function(){
+    let params = {
+          panEnabled: true,
+          zoomEnabled: true,
+          dblClickZoomEnabled: true,
+          controlIconsEnabled: true,
+          mouseWheelZoomEnabled: false,
+          preventMouseEventsDefault: true,
+          zoomScaleSensitivity: 0.6,
+          minZoom: 0.5,
+          maxZoom: 3,
+           fit: true
+          , contain: true
+          , center: true
+          , refreshRate: 'auto'
+      };
+      svgPanZoom('#svg-{{$id}}'        ,params);
+  })
+</script>
