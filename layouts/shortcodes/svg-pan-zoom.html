@@ -1,24 +1,53 @@
 {{ $src := .Get 0 }}
 {{ $id := substr (md5 $src) 0 16 }}
 
-<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" />
+<div class="container">
+  <div class="row">
+      <div class="col text-center">
+          <a id="btn-{{$id}}" class="book-btn" role="button" >Full Screen</a>
+      </div>
+</div>
+<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" style="background-color: #FFFFFF"/>
 <script>
-  document.getElementById('svg-{{$id}}').addEventListener('load', function(){
+  //svg-pan-zoom.min.js must be included in the header
+  //https://github.com/WebSVG/svg-pan-zoom/blob/master/dist/svg-pan-zoom.min.js
+  function setup_svg_panzoom(){
     let params = {
           panEnabled: true,
           zoomEnabled: true,
           dblClickZoomEnabled: true,
-          controlIconsEnabled: true,
-          mouseWheelZoomEnabled: false,
+          controlIconsEnabled: false,
+          mouseWheelZoomEnabled: true,
           preventMouseEventsDefault: true,
           zoomScaleSensitivity: 0.6,
           minZoom: 0.5,
-          maxZoom: 3,
+          maxZoom: 4,
            fit: true
           , contain: true
           , center: true
           , refreshRate: 'auto'
       };
-      svgPanZoom('#svg-{{$id}}'        ,params);
-  })
-</script>
+      let svg_pz = svgPanZoom('#svg-{{$id}}'        ,params);
+      window["svg_{{$id}}"] = svg_pz
+
+      let button = document.getElementById("btn-{{$id}}");
+      button.onclick = ()=>{
+          var elem = document.getElementById("svg-{{$id}}");
+          if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+          } else if (elem.webkitRequestFullscreen) { /* Safari */
+          elem.webkitRequestFullscreen();
+          } else if (elem.msRequestFullscreen) { /* IE11 */
+          elem.msRequestFullscreen();
+          }
+      };
+  }
+  function reset_position(){
+    window["svg_{{$id}}"].resize()
+    window["svg_{{$id}}"].fit()
+    window["svg_{{$id}}"].center()
+  }
+  document.getElementById('svg-{{$id}}').addEventListener('load', setup_svg_panzoom)
+  window.addEventListener('resize', reset_position)
+
+ </script>
