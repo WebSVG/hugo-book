@@ -7,7 +7,7 @@
           <a id="btn-{{$id}}" class="book-btn" role="button" >Full Screen</a>
       </div>
 </div>
-<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" style="background-color: #FFFFFF"/>
+<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" {{with .Get 1 }} style="background-color:{{.}}"{{ end }}/>
 <script>
   //svg-pan-zoom.min.js must be included in the header
   //https://github.com/WebSVG/svg-pan-zoom/blob/master/dist/svg-pan-zoom.min.js
