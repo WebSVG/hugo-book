@@ -1,0 +1,7 @@
+{{ $src := .Get 0 }}
+{{ $id := substr (md5 $src) 0 16 }}
+
+<div id="stl-{{$id}}"></div>
+<script>
+  var stl_viewer=new StlViewer(document.getElementById("stl-{{$id}}"), { models: [ {id:0, filename:"{{$src}}"} ] });
+ </script>
