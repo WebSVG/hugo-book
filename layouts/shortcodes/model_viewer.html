@@ -1,4 +1,15 @@
 {{ $src := .Get 0 }}
 {{ $id := substr (md5 $src) 0 16 }}
+{{ $height := .Get 1 | default 600 }}
 
-<model-viewer id="{{$id}}" src="{{$src}}" width="600px" auto-rotate camera-controls ></model-viewer>
+<div width="600">
+    <model-viewer 
+        id="{{$id}}"
+        src="{{$src}}"
+        style="width:100%;height: {{$height}}px; "
+        exposure="0.2"
+        auto-rotate camera-controls >
+    </model-viewer>
+</div>
+
+

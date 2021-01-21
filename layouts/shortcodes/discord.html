@@ -1,0 +1,5 @@
+{{ $id := .Get "id" }}
+{{ $height := .Get "height" | default 300 }}
+<div class="text-center">
+    <iframe src="https://discord.com/widget?id={{$id}}&theme=dark" width="350" height="{{$height}}" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+</div>
