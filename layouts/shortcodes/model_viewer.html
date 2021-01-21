@@ -1,0 +1,4 @@
+{{ $src := .Get 0 }}
+{{ $id := substr (md5 $src) 0 16 }}
+
+<model-viewer id="{{$id}}" src="{{$src}}" width="600px" auto-rotate camera-controls ></model-viewer>
