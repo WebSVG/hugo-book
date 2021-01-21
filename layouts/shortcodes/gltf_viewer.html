@@ -1,0 +1,4 @@
+{{ $src := .Get 0 }}
+{{ $id := substr (md5 $src) 0 16 }}
+
+<babylon id="{{$id}}" model="{{$src}}" ></babylon>
