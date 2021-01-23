@@ -7,6 +7,9 @@
 {{ with .Get "relref" }}
   {{ $ref = relref $ . }}
 {{ end }}
+
+<div class="col text-center">
 <a {{ with $ref }} href="{{.}}" {{ end }} {{ with $target }} target="{{.}}" {{ end }} class="book-btn{{ with .Get "class" }} {{ . }}{{ end }}">
   {{ $.Inner }}
 </a>
+</div>
