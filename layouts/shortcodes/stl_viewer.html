@@ -3,9 +3,14 @@
 
 <div id="stl-{{$id}}" height="500px" ></div>
 <script>
+  const PI_2 = 3.141592653589/2
   var stl_viewer=new StlViewer(document.getElementById("stl-{{$id}}"), 
   {
     canvas_height:"50",
-    models: [{id:0,filename:"{{$src}}", rotationy:2}] 
+    models: [{
+      id:0,
+      filename:"{{$src}}",
+      rotationx:0
+    }] 
   });
  </script>

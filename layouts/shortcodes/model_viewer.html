@@ -2,7 +2,7 @@
 {{ $id := substr (md5 $src) 0 16 }}
 {{ $height := .Get 1 | default 600 }}
 
-<div width="600">
+<div >
     <model-viewer 
         id="{{$id}}"
         src="{{$src}}"
