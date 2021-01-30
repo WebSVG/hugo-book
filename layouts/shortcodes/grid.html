@@ -1,0 +1,89 @@
+{{ $name := .Get 0 }}
+{{ $id := substr (md5 $name) 0 16 }}
+
+<link rel="stylesheet" href="/css/grid.css" />
+<script src="/js/grid.js" type="module"></script>
+
+<div class="container ml-auto text-center">
+  <div class="btn-group flex-wrap" role="group" id="buttons-{{$id}}">
+    {{ range .Page.Params.grid.filters }}
+    <a type="button" class="book-btn" data-filter="{{ . }}">
+      {{ . }}
+    </a>
+    {{ end }}
+  </div>
+</div>
+<div  id="grid-{{$id}}"
+      data-slot="{{.Page.Params.grid.slot}}"
+      data-items="{{ jsonify .Page.Params.grid.items }}"
+      data-filters="{{ jsonify .Page.Params.grid.filters }}"
+      >
+  {{ range split .Inner "<--->" }}
+  <div class="grid-child markdown-inner text-center"  >
+    {{ . | markdownify }}
+  </div>
+  {{ end }}
+</div>
+<script type="module">
+  import {defined} from "/js/web-js-utils.js"
+  import {Grid} from "/js/grid.js"
+  function get_custom_div_props(){
+      return {
+          width:Math.round(Math.random()*200)+100,
+          height : Math.round(Math.random()*200)+100,
+          r : 150,
+          g : Math.round(Math.random()*155)+100,
+          b : Math.round(Math.random()*155)+100
+      }
+  }
+  let main_div = document.getElementById("grid-{{$id}}");
+  //console.log(main_div.getAttribute("data-filters"))
+  let grid = new Grid(main_div,main_div.getAttribute("data-slot"))
+  const config = JSON.parse(main_div.getAttribute("data-items"))
+  var items = main_div.childNodes;
+  let config_index = 0;
+  for(let i=0; i<items.length; i++) {
+      if ((defined(items[i].hasAttribute)) && (items[i].classList.contains("grid-child"))) {
+        let conf = config[config_index++]
+        let new_div = grid.set_div(items[i],conf);
+        //console.log(`processing ${i} : ${new_div.id}`)
+        if(defined(conf.tags)){
+          new_div.setAttribute("data-tags",conf.tags)
+        }
+      }
+  }
+
+  let buttons_bar = document.getElementById("buttons-{{$id}}");
+
+  let buttons = buttons_bar.getElementsByClassName("book-btn");
+  for(let i=0; i<buttons.length; i++) {
+    let button = buttons[i]
+    button.addEventListener("click",(e)=>{
+        let filter = e.target.getAttribute("data-filter")
+        let main_div = document.getElementById("grid-{{$id}}");
+        var items = main_div.getElementsByClassName("grid-child");
+        for(let i=0; i<items.length; i++) {
+          let item = items[i]
+          if(filter == "All"){
+            item.classList.remove("grid-hidden")
+          }else{
+            if(item.hasAttribute("data-tags")){
+              if(item.getAttribute("data-tags").split(',').includes(filter)){
+                item.classList.remove("grid-hidden")
+                //console.log(`found ${filter} => ${item.getAttribute("data-tags")}`)
+              }else{
+                item.classList.add("grid-hidden")
+                //console.log(`no ${filter} in (${item.getAttribute("data-tags")})`)
+              }
+            }else{
+              item.classList.add("grid-hidden")
+              //console.log(`no ${filter} as no tags`)
+            }
+          }
+        }
+    })
+  }
+
+  grid.apply()
+
+</script>
