@@ -13,6 +13,14 @@
   /*background-color:rgb(83, 83, 83);*/
 }
 
+.grid-button{
+  margin-bottom: 10px;
+}
+.grid-button:hover{
+  margin-bottom: 10px;
+  box-shadow: 4px 4px 8px 4px rgba(145, 144, 144, 0.5);
+}
+
 .grid-hidden{
     display: none;
 }

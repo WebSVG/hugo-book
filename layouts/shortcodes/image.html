@@ -2,13 +2,17 @@
 {{ $alt := .Get "alt" }}
 {{ $width := .Get "width" }}
 {{ $height := .Get "height" }}
+{{ $href := .Get "href" }}
 
 <div class="text-center">
-  <img
+  <a >
+    <img
     src="{{ $src }}"
     alt="{{ $alt }}"
     width="{{ $width }}"
     height="{{ $height }}"
     decoding="async"
   />
+  </a>
+  
 </div>
