@@ -19,7 +19,8 @@
       data-filters="{{ jsonify .Page.Params.grid.filters }}"
       >
   {{ range split .Inner "<--->" }}
-  <div class="grid-child markdown-inner text-center"  >
+  <div class="grid-child card markdown-inner"  >
+      <h2 class="card-title text-center">H1</h2>
     {{ . | markdownify }}
   </div>
   {{ end }}
@@ -51,6 +52,10 @@
           new_div.setAttribute("data-tags",conf.tags)
         }
       }
+  }
+  let cards = main_div.getElementsByClassName("card-title");
+  for(let i=0;i<cards.length;i++){
+    cards[i].innerHTML = config[i].name;
   }
 
   let buttons_bar = document.getElementById("buttons-{{$id}}");

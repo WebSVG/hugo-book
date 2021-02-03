@@ -1,8 +1,17 @@
-.grid-child {
-    padding-left: 0;
-    padding-right: 0;
+.card {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
     width: 100%;
-  }
+    border-radius: 20px;
+    box-shadow: 4px 4px 8px 0px rgba(145, 144, 144, 0.5);
+}
+  
+.card-title{
+  padding-top: 20px;
+  padding-bottom: 10px;
+  /*background-color:rgb(83, 83, 83);*/
+}
 
 .grid-hidden{
     display: none;

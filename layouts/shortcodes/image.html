@@ -1,12 +1,14 @@
 {{ $src := .Get "src" }}
 {{ $alt := .Get "alt" }}
 {{ $width := .Get "width" }}
+{{ $height := .Get "height" }}
 
 <div class="text-center">
   <img
     src="{{ $src }}"
     alt="{{ $alt }}"
     width="{{ $width }}"
+    height="{{ $height }}"
     decoding="async"
   />
 </div>
