@@ -5,7 +5,7 @@
 {{ $href := .Get "href" }}
 
 <div class="text-center">
-  <a >
+  <a {{ with .Get "href" }} href="{{ . }}" {{ end }}>
     <img
     src="{{ $src }}"
     alt="{{ $alt }}"

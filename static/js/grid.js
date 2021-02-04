@@ -104,14 +104,13 @@ class Grid{
         return c_comp;
     }
 
-    set_div(div,config){
+    set_div(div){
         let parent = this.main_div
         parent.appendChild(div)
         const side_size = parent.getAttribute("data-side-min");
-        const width  = config.width;
-        const height = config.height;
-        div.setAttribute("data-width" ,config.width);
-        div.setAttribute("data-height",config.height | 150);
+        let width = div.getAttribute("data-width");
+        let height = 150;
+        div.setAttribute("data-height",height);
         const id = `div_${suid()}`;
         div.id = id;
         const width_span = Math.ceil(width/side_size);

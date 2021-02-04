@@ -13,14 +13,16 @@
     {{ end }}
   </div>
 </div>
-<div  id="grid-{{$id}}"
-      data-slot="{{.Page.Params.grid.slot}}"
-      data-items="{{ jsonify .Page.Params.grid.items }}"
-      data-filters="{{ jsonify .Page.Params.grid.filters }}"
-      >
+<div  id="grid-{{$id}}" data-slot="{{.Page.Params.grid.slot}}" >
+  {{ $counter := 0 }} 
+  {{ $items := .Page.Params.grid.items }} 
   {{ range split .Inner "<--->" }}
-  <div class="grid-child card markdown-inner"  >
-      <h2 class="card-title text-center">H1</h2>
+  {{ $name := (index $items $counter).name }}
+  {{ $width := (index $items $counter).width }}
+  {{ $tags := delimit (index $items $counter).tags "," }}
+  {{ $counter = add $counter 1 }} 
+    <div class="grid-child card markdown-inner" data-tags="{{ $tags }}" data-width="{{ $width }}" >
+      <h2 class="card-title text-center">{{ $name }}</h2>
     {{ . | markdownify }}
   </div>
   {{ end }}
@@ -38,24 +40,13 @@
       }
   }
   let main_div = document.getElementById("grid-{{$id}}");
-  //console.log(main_div.getAttribute("data-filters"))
   let grid = new Grid(main_div,main_div.getAttribute("data-slot"))
-  const config = JSON.parse(main_div.getAttribute("data-items"))
   var items = main_div.childNodes;
-  let config_index = 0;
   for(let i=0; i<items.length; i++) {
-      if ((defined(items[i].hasAttribute)) && (items[i].classList.contains("grid-child"))) {
-        let conf = config[config_index++]
-        let new_div = grid.set_div(items[i],conf);
-        //console.log(`processing ${i} : ${new_div.id}`)
-        if(defined(conf.tags)){
-          new_div.setAttribute("data-tags",conf.tags)
-        }
+    let item = items[i]
+      if ((defined(item.hasAttribute)) && (item.classList.contains("grid-child"))) {
+        grid.set_div(item);
       }
-  }
-  let cards = main_div.getElementsByClassName("card-title");
-  for(let i=0;i<cards.length;i++){
-    cards[i].innerHTML = config[i].name;
   }
 
   let buttons_bar = document.getElementById("buttons-{{$id}}");
