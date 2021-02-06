@@ -1,31 +1,19 @@
 
-import {html,css,suid} from "/js/web-js-utils.js"
+import {css,suid} from "/js/web-js-utils.js"
 
 //restricting to a singleton (one instance), for easier parents retriaval
 let that = null
 
-function scale_grid(parent,sheet,props){
-    const id = `div_${suid()}`;
-
+function scale_grid(element,sheet){
+    const id = element.id;
+    let grid_side = element.getAttribute("data-side-min")
     sheet.insertRule(/*css*/`
     #${id} {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(${props.grid_side}px, 1fr));
-        grid-gap: 10px;
-        align-items: top;
-        justify-items: top;
+        grid-template-columns: repeat(auto-fit, minmax(${grid_side}px, 1fr));
     }
     `);
-    let comp = html(parent,/*html*/`
-        <div    id=${id} 
-                class="main" 
-                data-side-min=${props.grid_side} 
-                data-max-sides=${props.max_sides} 
-                data-scale="1" 
-        />
-    `);
-    comp.addEventListener('wheel',onWheel);
-    return comp;
+    element.addEventListener('wheel',onWheel);
+    return element;
 }
 
 
@@ -66,42 +54,13 @@ function onWheel(e){
 class Grid{
     /**
      * 
-     * @param {*} parent : parent element
-     * @param {*} grid_side : slots unit to be used for the grid
-     * @param {*} max_sides : max number of slots that an element can take, still only 2 is supported
+     * @param {*} element : already created grid element
      */
-    constructor(parent,grid_side,max_sides=2){
+    constructor(element){
         this.sheet = new CSSStyleSheet()
-        this.main_div = scale_grid(parent,this.sheet,{grid_side:grid_side,max_sides:max_sides});
+        this.main_div = scale_grid(element,this.sheet);
         //console.log(JSON.stringify(this.main_div))
         that = this
-    }
-
-    get_div(props){
-        let parent = this.main_div
-        const side_size = parent.getAttribute("data-side-min");
-        const max_nb_sides = parent.getAttribute("data-max-sides");
-        const width = props.width;
-        const height = props.height;
-        const id = `div_${suid()}`;
-        const width_span = Math.ceil(width/side_size);
-        const height_span = Math.ceil(height/side_size);
-        css(this.sheet,/*css*/`
-        #${id} {
-            width:${width};
-            grid-column:span ${width_span};
-            grid-row:span ${height_span};
-            height:${height};
-            background: rgb(${props.r},${props.g},${props.b});
-            //align-self: center;
-            //justify-self: center;
-        }
-        `);
-        let c_comp = html(parent,/*html*/`
-            <div id=${id} class="child" data-width=${width} data-height=${height} />
-        `);
-        c_comp.addEventListener('wheel',onWheel);
-        return c_comp;
     }
 
     set_div(div){

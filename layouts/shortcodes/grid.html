@@ -13,18 +13,22 @@
     {{ end }}
   </div>
 </div>
-<div  id="grid-{{$id}}" data-slot="{{.Page.Params.grid.slot}}" >
+<div  id="grid-{{$id}}" 
+      class="grid"
+      data-scale="1"
+      data-side-min="{{.Page.Params.grid.slot}}" 
+      >
   {{ $counter := 0 }} 
   {{ $items := .Page.Params.grid.items }} 
   {{ range split .Inner "<--->" }}
-  {{ $name := (index $items $counter).name }}
-  {{ $width := (index $items $counter).width }}
-  {{ $tags := delimit (index $items $counter).tags "," }}
-  {{ $counter = add $counter 1 }} 
-    <div class="grid-child card markdown-inner" data-tags="{{ $tags }}" data-width="{{ $width }}" >
-      <h2 class="card-title text-center">{{ $name }}</h2>
-    {{ . | markdownify }}
-  </div>
+    {{ $name := (index $items $counter).name }}
+    {{ $width := (index $items $counter).width }}
+    {{ $tags := delimit (index $items $counter).tags "," }}
+    {{ $counter = add $counter 1 }} 
+      <div class="grid-child card markdown-inner" data-tags="{{ $tags }}" data-width="{{ $width }}" >
+        <h2 class="card-title text-center">{{ $name }}</h2>
+      {{ . | markdownify }}
+    </div>
   {{ end }}
 </div>
 <script type="module">
@@ -39,9 +43,9 @@
           b : Math.round(Math.random()*155)+100
       }
   }
-  let main_div = document.getElementById("grid-{{$id}}");
-  let grid = new Grid(main_div,main_div.getAttribute("data-slot"))
-  var items = main_div.childNodes;
+  let grid_div = document.getElementById("grid-{{$id}}");
+  let grid = new Grid(grid_div)
+  var items = grid_div.childNodes;
   for(let i=0; i<items.length; i++) {
     let item = items[i]
       if ((defined(item.hasAttribute)) && (item.classList.contains("grid-child"))) {
@@ -56,8 +60,8 @@
     let button = buttons[i]
     button.addEventListener("click",(e)=>{
         let filter = e.target.getAttribute("data-filter")
-        let main_div = document.getElementById("grid-{{$id}}");
-        var items = main_div.getElementsByClassName("grid-child");
+        let grid_div = document.getElementById("grid-{{$id}}");
+        var items = grid_div.getElementsByClassName("grid-child");
         for(let i=0; i<items.length; i++) {
           let item = items[i]
           if(filter == "All"){

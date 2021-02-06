@@ -1,3 +1,10 @@
+.grid{
+  display: grid;
+  grid-gap: 10px;
+  align-items: top;
+  justify-items: top;
+}
+
 .card {
     padding-left: 20px;
     padding-right: 20px;
