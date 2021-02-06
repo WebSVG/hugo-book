@@ -4,19 +4,21 @@
   align-items: top;
   justify-items: top;
   /*minmax(${grid_side}px, 1fr) override by config "grid.slot" in grig.js */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .card {
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 20px;
-    width: 100%;
     border-radius: 20px;
     box-shadow: 4px 4px 8px 0px rgba(145, 144, 144, 0.5);
     background: rgb(48,54,60);
     align-self: top;
     justify-self: top;
+    /*will be overridden by scale_card() */
+    grid-column:span 1;
+    grid-row:span 1;
 }
   
 .card h2{

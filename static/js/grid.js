@@ -75,6 +75,7 @@ class Grid{
         #${id} {
             grid-column:span ${width_span};
             grid-row:span ${height_span};
+            min-width: ${width}px;
         }
         `);
         div.addEventListener('wheel',onWheel);
