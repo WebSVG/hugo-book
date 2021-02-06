@@ -3,6 +3,8 @@
   grid-gap: 10px;
   align-items: top;
   justify-items: top;
+  /*minmax(${grid_side}px, 1fr) override by config "grid.slot" in grig.js */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .card {
@@ -12,17 +14,36 @@
     width: 100%;
     border-radius: 20px;
     box-shadow: 4px 4px 8px 0px rgba(145, 144, 144, 0.5);
+    background: rgb(48,54,60);
+    align-self: top;
+    justify-self: top;
 }
   
-.card-title{
+.card h2{
+  text-align: center;
   padding-top: 20px;
   padding-bottom: 10px;
   /*background-color:rgb(83, 83, 83);*/
 }
 
+.grid-buttons-bar{
+  -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+     -khtml-user-select: none; 
+       -moz-user-select: none; 
+        -ms-user-select: none; 
+            user-select: none; 
+}
+
 .grid-button{
   margin-bottom: 10px;
 }
+
+.grid-button.selected{
+  font-weight: bold;
+  background-color: rgb(95, 95, 95);
+}
+
 .grid-button:hover{
   margin-bottom: 10px;
   box-shadow: 4px 4px 8px 4px rgba(145, 144, 144, 0.5);
