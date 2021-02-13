@@ -88,9 +88,17 @@
     border-radius: $border-radius;
     cursor: pointer;
 
+    svg{
+      width:20px;
+      float: right;
+      margin:5px;
+      margin-left:15px;
+    }
+
     &:hover {
       text-decoration: none;
-    }
+      box-shadow: 4px 4px 8px 4px rgba(145, 144, 144, 0.2);
+      }
   }
 
   // {{< hint >}}
