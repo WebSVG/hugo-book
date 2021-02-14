@@ -14,14 +14,20 @@
     padding-bottom: 20px;
     border-radius: 20px;
     box-shadow: 4px 4px 8px 0px rgba(145, 144, 144, 0.5);
-    background: rgb(48,54,60);
+    background: rgb(52,58,64);
     align-self: top;
     justify-self: top;
     /*will be overridden by scale_card() */
     grid-column:span 1;
     grid-row:span 1;
+
 }
-  
+
+.card:hover {
+  box-shadow: 4px 4px 16px 8px rgba(179, 179, 179, 0.4);
+}
+
+
 .card h2{
   text-align: center;
   padding-top: 20px;
