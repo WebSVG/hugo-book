@@ -14,6 +14,8 @@ $( document ).ready(function() {
 	/*
 	Initialise Photoswipe
 	*/
+	let pswipe = document.getElementById("p_swipe");
+	document.body.appendChild(pswipe);
 	var items = []; // array of slide objects that will be passed to PhotoSwipe()
 	// for every figure element on the page:
 	$('figure').each( function() {
