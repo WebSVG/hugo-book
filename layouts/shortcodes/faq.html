@@ -1,0 +1,35 @@
+
+
+{{ range split .Inner "<===>" }}
+  {{ $q_and_a := split . "<--->" }}
+  {{ $question := index $q_and_a 0 }}
+  {{ $answer := index $q_and_a 1 }}
+  <details>
+    <summary>{{ $question }}</summary>
+    <div class="markdown-inner">
+      {{ $answer | markdownify }}
+    </div>
+  </details>
+{{ end }}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+    {{ range split .Inner "<===>" }}
+    {{ $q_and_a := split . "<--->" }}
+    {{ $question := index $q_and_a 0 }}
+    {{ $answer := index $q_and_a 1 }}
+    {
+      "@type": "Question",
+      "name": {{$question}},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{$answer}}
+      }
+    },
+    {{ end }}
+    ]
+  }
+</script>
