@@ -17,18 +17,36 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-    {{ range split .Inner "<===>" }}
-    {{ $q_and_a := split . "<--->" }}
-    {{ $question := index $q_and_a 0 }}
-    {{ $answer := index $q_and_a 1 }}
-    {
-      "@type": "Question",
-      "name": {{$question}},
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": {{$answer}}
+    {{ $qa_list := split .Inner "<===>" }}
+    {{ range first 1 $qa_list }}
+      {{ $q_and_a := split . "<--->" }}
+      {{ $question := index $q_and_a 0 }}
+      {{ $question = trim $question "\r\n" }}
+      {{ $answer := index $q_and_a 1 }}
+      {{ $answer = trim $answer "\r\n" }}
+      {
+        "@type": "Question",
+        "name": {{$question}},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{$answer | markdownify}}
+        }
       }
-    },
+    {{ end }}
+    {{ range after 1 $qa_list }}
+      {{ $q_and_a := split . "<--->" }}
+      {{ $question := index $q_and_a 0 }}
+      {{ $question = trim $question "\r\n" }}
+      {{ $answer := index $q_and_a 1 }}
+      {{ $answer = trim $answer "\r\n" }}
+      ,{
+        "@type": "Question",
+        "name": {{$question}},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{$answer | markdownify}}
+        }
+      }
     {{ end }}
     ]
   }
