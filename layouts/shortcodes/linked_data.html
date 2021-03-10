@@ -1,0 +1,6 @@
+{{ $json_file := .Get 0 }}
+{{ $json_data := getJSON $json_file }}
+
+<script type="application/ld+json">
+  {{ $json_data }}
+</script>
