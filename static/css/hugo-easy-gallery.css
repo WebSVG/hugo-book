@@ -10,7 +10,7 @@ Grid Layout Styles
 .gallery {
     overflow: hidden;
     margin: 10px;
-    max-width: 768px;
+    max-width: 1024px;
 }
 .gallery .box {
     float: left;
@@ -19,25 +19,32 @@ Grid Layout Styles
     width: 100%;
     padding-bottom: 100%; 
 }
-@media only screen and (min-width : 365px) {
+@media only screen and (min-width : 480px) {
     /* Tablet view: 2 tiles */
     .gallery .box {
         width: 50%;
         padding-bottom: 50%;
     }
 }
-@media only screen and (min-width : 480px) {
+@media only screen and (min-width : 760px) {
     /* Small desktop / ipad view: 3 tiles */
     .gallery .box {
         width: 33.3%;
-        padding-bottom: 33.3%; /*  */
+        padding-bottom: 33.3%;
     }
 }
-@media only screen and (min-width : 9999px) {
+@media only screen and (min-width : 1024px) {
+    /* Small desktop / ipad view: 3 tiles */
+    .gallery .box {
+        width: 25%;
+        padding-bottom: 25%;
+    }
+}
+@media only screen and (min-width : 2048px) {
    /* Medium desktop: 4 tiles */
-   .box {
-      width: 25%;
-      padding-bottom: 25%;
+   .gallery .box {
+      width: 20%;
+      padding-bottom: 20%;
    }
 }
 
