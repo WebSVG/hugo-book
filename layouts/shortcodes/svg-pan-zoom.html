@@ -9,6 +9,7 @@
 </div>
 <embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" {{with .Get 1 }} style="background-color:{{.}}"{{ end }}/>
 <script>
+  //https://github.com/bumbu/svg-pan-zoom
   function setup_svg_panzoom(){
     let params = {
           panEnabled: true,
@@ -20,13 +21,38 @@
           zoomScaleSensitivity: 0.6,
           minZoom: 0.5,
           maxZoom: 4,
-           fit: true
-          , contain: true
-          , center: true
-          , refreshRate: 'auto'
+          //onPan: (newPan)=>{console.log(newPan)},
+           fit: true,
+          contain: true,
+          center: true,
+          refreshRate: 'auto'
       };
       let svg_pz = svgPanZoom('#svg-{{$id}}'        ,params);
       window["svg_{{$id}}"] = svg_pz
+      //handle deep linking
+      //?svg=nrf52-sensor-tag&x=280&y=115&z=3.4#schematics
+      if(window.location.search.startsWith('?')){
+        let search = window.location.search.substring(1);
+        let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+        if(params.hasOwnProperty('svg')){
+          let embed = document.getElementById('svg-{{$id}}')
+          let viewport = embed.getSVGDocument().getElementsByClassName("svg-pan-zoom_viewport")[0]
+          viewport.style.transition = "transform 1s ease"
+          const name = embed.getAttribute("src").split('/').slice(-1)[0].split('.')[0]
+          if(params.svg == name){
+            console.log(`Deep SVG Name Match. link params ${JSON.stringify(params)}`)
+            setTimeout(()=>{
+              if(params.hasOwnProperty('x') && params.hasOwnProperty('y') && params.hasOwnProperty('z')){
+                svg_pz.zoomAtPoint(params.z,{x:params.x, y:params.y},true)//absolute zoom value
+              }
+            },1000)
+            setTimeout(()=>{
+              viewport.style.transition = ""
+            },2000)
+          }
+        }
+      }
+
       let button = document.getElementById("btn-{{$id}}");
       button.onclick = ()=>{
           var elem = document.getElementById("svg-{{$id}}");
@@ -44,6 +70,6 @@
     window["svg_{{$id}}"].fit()
     window["svg_{{$id}}"].center()
   }
-  document.getElementById('svg-{{$id}}').addEventListener('load', setup_svg_panzoom)
+  document.getElementById("svg-{{$id}}").addEventListener('load', setup_svg_panzoom)
   window.addEventListener('resize', reset_position)
  </script>
