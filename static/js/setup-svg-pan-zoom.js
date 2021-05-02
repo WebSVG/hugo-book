@@ -1,6 +1,81 @@
 //https://github.com/bumbu/svg-pan-zoom
+import * as filters from "./svg_filters.js";
+//?svg=nrf52-sensor-tag&x=0.5&y=0.5&z=3.4#schematics
+function deep_svg_xyz(embed,x,y,z,abs_xy=false){
+    let viewport = embed.getSVGDocument().getElementsByClassName("svg-pan-zoom_viewport")[0]
+
+    let zoom = ()=>{
+        viewport.style.transition = "transform 1s ease"
+        const name = embed.id.substring(4)
+        let svg_pz = window[`svgpz-${name}`]
+        if(!abs_xy){
+            const abs_x = svg_pz.getSizes().width * x
+            const abs_y = svg_pz.getSizes().height * y
+            svg_pz.zoomAtPoint(z,{x:abs_x, y:abs_y},true)//absolute zoom value
+        }else{
+            console.log(`zooming in absolute pos (${x},${y})`)
+            svg_pz.zoomAtPoint(z,{x:x,y:y},true)//absolute zoom value
+        }
+    }
+    let deinit = ()=>{
+        viewport.style.transition = ""
+    }
+
+    setTimeout(zoom,1000)
+    setTimeout(deinit,2000)
+}
+
+function text_highlight_zoom(embed,svg,element,filter="glow"){
+    let raw_e_box = element.getBBox();
+    let e_box = element.getBoundingClientRect();
+    let svg_box = svg.getBBox();
+    //console.log(box)
+    //console.log(e_box)
+    //console.log(svg_box)
+    const x = (e_box.x + e_box.width/2)  / svg_box.width
+    const y = (e_box.y + e_box.height/2) / svg_box.height
+    const filter_radius = Math.min(raw_e_box.width,raw_e_box.height)/2;
+    console.log(`zooming (${x},${y}) ; filter radius (${filter_radius})`)
+    deep_svg_xyz(embed,x,y,3)
+    let g = element.closest("g")
+    if(filter == "glow"){
+        let glow = filters.create(svg,{type:"glow",color:"#c2feff",radius:400});
+        let attach = ()=>{
+            console.log("attaching")
+            filters.attach(g,glow)
+        }
+        let detach = ()=>{
+            console.log("detaching")
+            filters.detach(g,glow)
+        }
+        setTimeout(attach ,2000)
+        setTimeout(detach ,3000)
+    }else{
+        let glow_anim = filters.create(svg,{type:"glow_anim",color:"#c2feff",radius:400});
+        console.log("starting")
+        filters.start(g,glow_anim)
+    }
+}
+
+//?svg=nrf52-sensor-tag&text=VEML6030
+function deep_svg_text(embed,text){
+    ['text','tspan'].forEach((ref_tag)=>{
+        const svg = embed.getSVGDocument().getElementsByTagName('svg')[0]
+        const elements = svg.getElementsByTagName(ref_tag);
+        for(let element of elements){
+            if(element.innerHTML == text){
+                //filters.start(svg,tspan.parentElement.parentElement,glow_anim);
+                console.log(`found text '${text}' in <${element.tagName}>`)
+                text_highlight_zoom(embed,svg,element)
+            }
+        }
+    })
+}
+
 function setup_svg_panzoom(e){
-    const name = e.target.id.substring(4)
+    console.log("setup_svg_panzoom")
+    let embed = e.target
+    const name = embed.id.substring(4)
     console.log(name)
     let params = {
         panEnabled: true,
@@ -11,7 +86,7 @@ function setup_svg_panzoom(e){
         preventMouseEventsDefault: true,
         zoomScaleSensitivity: 0.6,
         minZoom: 0.5,
-        maxZoom: 4,
+        maxZoom: 5,
         //onPan: (newPan)=>{console.log(newPan)},
         fit: true,
         contain: true,
@@ -21,26 +96,22 @@ function setup_svg_panzoom(e){
     let svg_pz = svgPanZoom(`#${e.target.id}`        ,params);
     window[`svgpz-${name}`] = svg_pz
     //handle deep linking
-    //?svg=nrf52-sensor-tag&x=280&y=115&z=3.4#schematics
     if(window.location.search.startsWith('?')){
-    let search = window.location.search.substring(1);
-    let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
-    if(params.hasOwnProperty('svg')){
-        let embed = e.target
-        let viewport = embed.getSVGDocument().getElementsByClassName("svg-pan-zoom_viewport")[0]
-        viewport.style.transition = "transform 1s ease"
-        if(params.svg == name){
-        console.log(`Deep SVG Name Match. link params ${JSON.stringify(params)}`)
-        setTimeout(()=>{
-            if(params.hasOwnProperty('x') && params.hasOwnProperty('y') && params.hasOwnProperty('z')){
-            svg_pz.zoomAtPoint(params.z,{x:params.x, y:params.y},true)//absolute zoom value
+        let search = window.location.search.substring(1);
+        let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+        if(params.hasOwnProperty('svg')){
+            if(params.svg == name){
+                console.log(`Deep SVG Name Match`)
+                embed.scrollIntoView();
+                if(params.hasOwnProperty('x') && params.hasOwnProperty('y') && params.hasOwnProperty('z')){
+                    console.log(`params : xyz = (${params.x},${params.y},${params.z})`)
+                    deep_svg_xyz(embed,params.x,params.y,params.z)
+                }else if(params.hasOwnProperty('text')){
+                    console.log(`params text = ${params.text}`)
+                    deep_svg_text(embed,params.text)
+                }
             }
-        },1000)
-        setTimeout(()=>{
-            viewport.style.transition = ""
-        },2000)
         }
-    }
     }
 
     let button = document.getElementById(`btn-${name}`);
