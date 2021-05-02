@@ -39,7 +39,7 @@ function text_highlight_zoom(embed,svg,element,filter="glow"){
     deep_svg_xyz(embed,x,y,3)
     let g = element.closest("g")
     if(filter == "glow"){
-        let glow = filters.create(svg,{type:"glow",color:"#c2feff",radius:400});
+        let glow = filters.create(svg,{type:"glow",color:"#c2feff",radius:filter_radius});
         let attach = ()=>{
             console.log("attaching")
             filters.attach(g,glow)
@@ -51,7 +51,7 @@ function text_highlight_zoom(embed,svg,element,filter="glow"){
         setTimeout(attach ,2000)
         setTimeout(detach ,3000)
     }else{
-        let glow_anim = filters.create(svg,{type:"glow_anim",color:"#c2feff",radius:400});
+        let glow_anim = filters.create(svg,{type:"glow_anim",color:"#c2feff",radius:filter_radius});
         console.log("starting")
         filters.start(g,glow_anim)
     }
