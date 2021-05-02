@@ -15,6 +15,12 @@
   function window_reset_position(){
     reset_svg_panzoom("{{$name}}")
   }
-  document.getElementById("svg-{{$name}}").addEventListener('load', setup_svg_panzoom)
+  console.log(`into script for {{$name}}`)
+  //document.getElementById("svg-{{$name}}").addEventListener('load', setup_svg_panzoom)
+  
+  window.addEventListener('load', ()=>{
+    let embed = document.getElementById("svg-{{$name}}")
+    setup_svg_panzoom(embed)
+  })
   window.addEventListener('resize', window_reset_position)
  </script>

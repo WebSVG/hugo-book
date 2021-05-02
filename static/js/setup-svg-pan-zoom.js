@@ -72,9 +72,8 @@ function deep_svg_text(embed,text){
     })
 }
 
-function setup_svg_panzoom(e){
+function setup_svg_panzoom(embed){
     console.log("setup_svg_panzoom")
-    let embed = e.target
     const name = embed.id.substring(4)
     console.log(name)
     let params = {
@@ -93,7 +92,7 @@ function setup_svg_panzoom(e){
         center: true,
         refreshRate: 'auto'
     };
-    let svg_pz = svgPanZoom(`#${e.target.id}`        ,params);
+    let svg_pz = svgPanZoom(`#${embed.id}`        ,params);
     window[`svgpz-${name}`] = svg_pz
     //handle deep linking
     if(window.location.search.startsWith('?')){
