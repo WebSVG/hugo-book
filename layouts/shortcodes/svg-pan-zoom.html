@@ -1,75 +1,20 @@
 {{ $src := .Get 0 }}
 {{ $id := substr (md5 $src) 0 16 }}
+{{ $base := path.Base $src }}
+{{ $name := index (split $base ".") 0 }}
 
 <div class="container">
   <div class="row">
       <div class="col text-center">
-          <a id="btn-{{$id}}" class="book-btn" role="button" >Full Screen</a>
+          <a id="btn-{{$name}}" class="book-btn" role="button" >Full Screen</a>
       </div>
 </div>
-<embed id="svg-{{$id}}" type="image/svg+xml" width=100% src="{{$src}}" {{with .Get 1 }} style="background-color:{{.}}"{{ end }}/>
-<script>
-  //https://github.com/bumbu/svg-pan-zoom
-  function setup_svg_panzoom(){
-    let params = {
-          panEnabled: true,
-          zoomEnabled: true,
-          dblClickZoomEnabled: true,
-          controlIconsEnabled: false,
-          mouseWheelZoomEnabled: true,
-          preventMouseEventsDefault: true,
-          zoomScaleSensitivity: 0.6,
-          minZoom: 0.5,
-          maxZoom: 4,
-          //onPan: (newPan)=>{console.log(newPan)},
-           fit: true,
-          contain: true,
-          center: true,
-          refreshRate: 'auto'
-      };
-      let svg_pz = svgPanZoom('#svg-{{$id}}'        ,params);
-      window["svg_{{$id}}"] = svg_pz
-      //handle deep linking
-      //?svg=nrf52-sensor-tag&x=280&y=115&z=3.4#schematics
-      if(window.location.search.startsWith('?')){
-        let search = window.location.search.substring(1);
-        let params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
-        if(params.hasOwnProperty('svg')){
-          let embed = document.getElementById('svg-{{$id}}')
-          let viewport = embed.getSVGDocument().getElementsByClassName("svg-pan-zoom_viewport")[0]
-          viewport.style.transition = "transform 1s ease"
-          const name = embed.getAttribute("src").split('/').slice(-1)[0].split('.')[0]
-          if(params.svg == name){
-            console.log(`Deep SVG Name Match. link params ${JSON.stringify(params)}`)
-            setTimeout(()=>{
-              if(params.hasOwnProperty('x') && params.hasOwnProperty('y') && params.hasOwnProperty('z')){
-                svg_pz.zoomAtPoint(params.z,{x:params.x, y:params.y},true)//absolute zoom value
-              }
-            },1000)
-            setTimeout(()=>{
-              viewport.style.transition = ""
-            },2000)
-          }
-        }
-      }
-
-      let button = document.getElementById("btn-{{$id}}");
-      button.onclick = ()=>{
-          var elem = document.getElementById("svg-{{$id}}");
-          if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-          } else if (elem.webkitRequestFullscreen) { /* Safari */
-          elem.webkitRequestFullscreen();
-          } else if (elem.msRequestFullscreen) { /* IE11 */
-          elem.msRequestFullscreen();
-          }
-      };
+<embed id="svg-{{$name}}" type="image/svg+xml" width=100% src="{{$src}}" {{with .Get 1 }} style="background-color:{{.}}"{{ end }}/>
+<script type="module">
+  import {setup_svg_panzoom,reset_svg_panzoom} from "/js/setup-svg-pan-zoom.js"
+  function window_reset_position(){
+    reset_svg_panzoom("{{$name}}")
   }
-  function reset_position(){
-    window["svg_{{$id}}"].resize()
-    window["svg_{{$id}}"].fit()
-    window["svg_{{$id}}"].center()
-  }
-  document.getElementById("svg-{{$id}}").addEventListener('load', setup_svg_panzoom)
-  window.addEventListener('resize', reset_position)
+  document.getElementById("svg-{{$name}}").addEventListener('load', setup_svg_panzoom)
+  window.addEventListener('resize', window_reset_position)
  </script>
